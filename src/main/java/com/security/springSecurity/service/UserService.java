@@ -23,4 +23,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow(()->new RuntimeException("user.not.found"));
 
     }
+    public User findById(int id){
+        return userRepository.findById(id).orElseThrow(()->new RuntimeException("user.not.found"));
+    }
 }
