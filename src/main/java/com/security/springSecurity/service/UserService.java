@@ -28,4 +28,8 @@ public class UserService implements UserDetailsService {
     public User findById(int id){
         return userRepository.findById(id).orElseThrow(()->new RuntimeException("user.not.found"));
     }
+    public List<User> findAll(){
+        return userRepository.findAll();
+    }
+
 }
