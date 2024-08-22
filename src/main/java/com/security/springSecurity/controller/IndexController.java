@@ -1,5 +1,6 @@
 package com.security.springSecurity.controller;
 
+import com.security.springSecurity.config.SecurityHelper;
 import com.security.springSecurity.model.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,9 +15,7 @@ public class IndexController {
     }
     @GetMapping("/userDetails")
     public String userDetails(Model model){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = (User) principal;
-        model.addAttribute("user",user);
+        model.addAttribute("user", SecurityHelper.getCurrentUser());
         return "userDetails";
     }
 }
