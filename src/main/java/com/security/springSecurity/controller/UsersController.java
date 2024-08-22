@@ -5,6 +5,7 @@ import com.security.springSecurity.model.User;
 import com.security.springSecurity.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,12 @@ public class UsersController {
                 .role(user.getRole())
                 .build();
         return ResponseEntity.ok(build);
+    }
+
+    @GetMapping("/testAuthService")
+    @PostAuthorize("@authService.checkLoadUser(#returnObject)")
+    public ResponseEntity<?> testAuthService(){
+        return ResponseEntity.ok().build();
     }
 
 }
