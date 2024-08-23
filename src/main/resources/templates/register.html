@@ -6,6 +6,8 @@
 </head>
 <body>
     <h1>Register</h1>
+    <p th:if="${#fields.hasErrors('userSaveRequest.username')}">username  is not valid</p>
+    <p th:if="${#fields.hasErrors('userSaveRequest.password')}">password  is not valid</p>
     <form method="post" th:action="@{/login/register}">
         <div>
             <label for="username">
