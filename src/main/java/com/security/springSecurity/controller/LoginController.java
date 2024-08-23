@@ -1,10 +1,8 @@
 package com.security.springSecurity.controller;
 
+import com.security.springSecurity.dto.UserSaveRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/login")
@@ -19,5 +17,10 @@ public class LoginController {
         return "register";
     }
 
+    @PostMapping("/register")
+    public String saveUser(@ModelAttribute UserSaveRequest userSaveRequest){
+        System.out.println(userSaveRequest);
+        return "redirect:/login";
+    }
 
 }
