@@ -1,5 +1,6 @@
 package com.security.springSecurity.model;
 
+import com.security.springSecurity.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,14 +23,22 @@ public class User implements UserDetails {
     private int id;
     private String username;
     private String password;
-    private String role;
+    /**
+     * برای اینکه رول ها را همیشه داشته باشیم به صورت ایگر لود می کنیم
+     */
+    @ElementCollection(targetClass = Role.class,fetch = FetchType.EAGER)
+    @CollectionTable
+            (
+                    name = "roles",
+                    joinColumns = @JoinColumn(name = "id",referencedColumnName = "id")
+            )
+    @Enumerated(EnumType.STRING)
+    private List<Role> role;
     private Boolean enabled = true;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(role.split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return role;
     }
 
     @Override
