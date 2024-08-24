@@ -23,10 +23,12 @@ public class JwtService {
     private long expireDate;
 
     public String generateToke(UserDetails userDetails){
-        return buildToken(new HashMap<>(),userDetails,expireDate);
+        Map<String ,Object> claims = new HashMap<>();
+        claims.put("roles",userDetails.getAuthorities());
+        return buildToken(claims,userDetails,expireDate);
     }
     public String buildToken(
-            Map<String, Objects> claims,
+            Map<String, Object> claims,
             UserDetails userDetails,
             long expiresIn
     ){
