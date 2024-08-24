@@ -50,7 +50,11 @@ public class JwtService {
         Claims claims = parseToken(token);
         return claims.getSubject();
     }
-
+    public boolean isExpire(String token){
+        Claims claims = parseToken(token);
+        Date expiration = claims.getExpiration();
+        return expiration.before(new Date());
+    }
     private Claims parseToken(String token){
         return Jwts
                 .parserBuilder()

@@ -35,14 +35,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     {
       String authHeader =  request.getHeader("Authorization");
       if(Objects.isNull(authHeader)){
+          filterChain.doFilter(request,response);
           return;
       }
       String jwt = authHeader.substring(7);
+      if(jwtService.isExpire(jwt)){
+          filterChain.doFilter(request,response);
+          return;
+      }
       String username = jwtService.extractUserName(jwt);
       if(Objects.nonNull(username) && SecurityContextHolder.getContext().getAuthentication() == null){
        Token token1 =  tokenRepository.findByToken(jwt).stream().filter(token -> !token.isExpired() && !token.isRevoked()).collect(Collectors.toList())
                 .get(0);
        if(Objects.isNull(token1)){
+           filterChain.doFilter(request,response);
            return;
        }
           UserDetails userDetails = userService.loadUserByUsername(username);
