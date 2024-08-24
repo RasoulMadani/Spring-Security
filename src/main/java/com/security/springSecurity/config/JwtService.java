@@ -1,5 +1,6 @@
 package com.security.springSecurity.config;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -44,5 +45,18 @@ public class JwtService {
     private Key getSignKey(){
         byte[] keyByte = Decoders.BASE64.decode(key);
         return Keys.hmacShaKeyFor(keyByte);
+    }
+    public String extractUserName(String token){
+        Claims claims = parseToken(token);
+        return claims.getSubject();
+    }
+
+    private Claims parseToken(String token){
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

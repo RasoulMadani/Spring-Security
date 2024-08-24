@@ -19,6 +19,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +27,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class BasicConfiguration  {
     private final UserService userService;
+    private final JwtAuthFilter jwtAuthFilter;
 
 //    @Bean
 //    public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
@@ -50,6 +52,7 @@ public class BasicConfiguration  {
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form->form.loginPage("/login").permitAll())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
     @Bean
