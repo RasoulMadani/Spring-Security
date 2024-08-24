@@ -1,5 +1,8 @@
 package com.security.springSecurity.service;
 
+import com.security.springSecurity.config.JwtService;
+import com.security.springSecurity.dto.UserRestLoginRequest;
+import com.security.springSecurity.dto.UserRestLoginResponse;
 import com.security.springSecurity.dto.UserSaveRequest;
 import com.security.springSecurity.model.User;
 import com.security.springSecurity.repository.UserRepository;
@@ -9,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final JwtService jwtService;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(()->new RuntimeException("user.not.found"));
@@ -34,5 +39,15 @@ public class UserService implements UserDetailsService {
     }
     public void save(User user){
         userRepository.save(user);
+    }
+
+    public UserRestLoginResponse login(UserRestLoginRequest userRestLoginRequest) {
+        UserDetails userDetails = loadUserByUsername(userRestLoginRequest.getUsername());
+        if(!userRestLoginRequest.getPassword()
+                .equals(userDetails.getPassword())){
+            throw new RuntimeException("user.password.not.match");
+        }
+        String token = jwtService.generateToke(userDetails);
+        return new UserRestLoginResponse(token);
     }
 }

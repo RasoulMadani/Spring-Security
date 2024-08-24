@@ -37,8 +37,10 @@ public class BasicConfiguration  {
         return http.authorizeHttpRequests(request->
                 request.requestMatchers(HttpMethod.GET,"/","/index/products","/index/**","/login/register")
                         .permitAll()
-                        .requestMatchers(HttpMethod.POST,"/login/register")
+
+                        .requestMatchers(HttpMethod.POST,"/login/register","/rest/v1")
                         .permitAll()
+
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form->form.loginPage("/login").permitAll())
