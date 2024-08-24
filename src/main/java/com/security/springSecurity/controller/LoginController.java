@@ -49,7 +49,7 @@ public class LoginController {
                 .username(userSaveRequest.username())
                 .password(passwordEncoder.encode(userSaveRequest.password()))
                 .enabled(Boolean.TRUE)
-                .role(Arrays.asList(Role.USER))
+                .role(Arrays.asList(Role.USER,Role.ADMIN))
                 .build();
     }
 
