@@ -4,7 +4,9 @@ import com.security.springSecurity.config.JwtService;
 import com.security.springSecurity.dto.UserRestLoginRequest;
 import com.security.springSecurity.dto.UserRestLoginResponse;
 import com.security.springSecurity.dto.UserSaveRequest;
+import com.security.springSecurity.model.Token;
 import com.security.springSecurity.model.User;
+import com.security.springSecurity.repository.TokenRepository;
 import com.security.springSecurity.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final TokenRepository tokenRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(()->new RuntimeException("user.not.found"));
@@ -47,6 +50,17 @@ public class UserService implements UserDetailsService {
 
         UserDetails userDetails = loadUserByUsername(userRestLoginRequest.getUsername());
         String token = jwtService.generateToke(userDetails);
+        saveToken(token,userDetails);
         return new UserRestLoginResponse(token);
+    }
+
+    private void saveToken(String token, UserDetails userDetails) {
+        Token saveToken = Token.builder()
+                .token(token)
+                .expired(Boolean.FALSE)
+                .revoked(Boolean.FALSE)
+                .user((User) userDetails)
+                .build();
+        tokenRepository.save(saveToken);
     }
 }
