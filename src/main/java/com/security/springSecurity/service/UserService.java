@@ -8,6 +8,8 @@ import com.security.springSecurity.model.User;
 import com.security.springSecurity.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,11 +44,8 @@ public class UserService implements UserDetailsService {
     }
 
     public UserRestLoginResponse login(UserRestLoginRequest userRestLoginRequest) {
+
         UserDetails userDetails = loadUserByUsername(userRestLoginRequest.getUsername());
-        if(!userRestLoginRequest.getPassword()
-                .equals(userDetails.getPassword())){
-            throw new RuntimeException("user.password.not.match");
-        }
         String token = jwtService.generateToke(userDetails);
         return new UserRestLoginResponse(token);
     }
