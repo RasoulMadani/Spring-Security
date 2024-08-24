@@ -1,5 +1,6 @@
 package com.security.springSecurity.service;
 
+import com.security.springSecurity.dto.UserSaveRequest;
 import com.security.springSecurity.model.User;
 import com.security.springSecurity.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,7 @@ public class UserService implements UserDetailsService {
     public List<User> findAll(){
         return userRepository.findAll();
     }
-
+    public void save(User user){
+        userRepository.save(user);
+    }
 }
